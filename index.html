@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffd1dc;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #fullscreen-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffd1dc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: #ffb6c1;
+            padding: 5px;
+            border-bottom: 1px solid #ff69b4;
+            z-index: 1001;
+        }
+
+        .circle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .yellow { background-color: #ffeb3b; }
+        .green { background-color: #4caf50; }
+        .red { background-color: #f44336; }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1002;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #ff1493;
+            transform: scale(1.05);
+        }
+
+        .note {
+            position: fixed;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: float 4s linear infinite;
+            pointer-events: none;
+            padding: 15px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .note-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .note-text {
+            font-size: 28px;
+            color: #ff69b4;
+            margin: 10px 0;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .note-name {
+            font-size: 24px;
+            color: #ff1493;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .note img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .top-decoration {
+            height: 30px;
+            background: #ffb6c1;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            10% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            90% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        #start-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1002;
+        }
+
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <span class="circle yellow"></span>
+        <span class="circle green"></span>
+        <span class="circle red"></span>
+    </div>
+
+    <button id="start-button" onclick="startFullscreen()">Click vào đây</button>
+
+    <script>
+        function getRandomPosition() {
+            const padding = 20; // Reduced padding for more screen coverage
+            const maxX = window.innerWidth - 320;  // Note width + minimal padding
+            const maxY = window.innerHeight - 320; // Note height + minimal padding
+            
+            return {
+                x: padding + Math.random() * maxX,
+                y: padding + Math.random() * maxY
+            };
+        }
+
+        function createNote() {
+            const note = document.createElement('div');
+            note.className = 'note';
+            
+            const topDecoration = document.createElement('div');
+            topDecoration.className = 'top-decoration';
+            topDecoration.innerHTML = `
+                <span class="circle yellow"></span>
+                <span class="circle green"></span>
+                <span class="circle red"></span>
+            `;
+            
+            const content = document.createElement('div');
+            content.className = 'note-content';
+            content.innerHTML = `
+                <div class="note-text">Anh yêu em</div>
+                <div class="note-name">Phương Anh</div>
+                <img src="girl-with-flowers.png" alt="Phương Anh">
+            `;
+            
+            note.appendChild(topDecoration);
+            note.appendChild(content);
+            
+            const pos = getRandomPosition();
+            note.style.left = pos.x + 'px';
+            note.style.top = pos.y + 'px';
+            
+            document.body.appendChild(note);
+            
+            setTimeout(() => {
+                note.remove();
+            }, 4000);
+        }
+
+        function startFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+            
+            // Hide the button after clicking
+            document.getElementById('start-button').style.display = 'none';
+            
+            // Start creating notes
+            setInterval(createNote, 50);
+        }
+    </script>
+</body>
+</html>
