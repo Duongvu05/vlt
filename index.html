@@ -176,6 +176,9 @@
     </div>
 
     <button id="start-button" onclick="startFullscreen()">Click vào đây</button>
+    <audio id="bgMusic" loop>
+        <source src="Troye Sivan - Angel Baby (Lyrics).mp3" type="audio/mp3">
+    </audio>
 
     <script>
         function getRandomPosition() {
@@ -235,6 +238,13 @@
             
             // Hide the button after clicking
             document.getElementById('start-button').style.display = 'none';
+            
+            // Play music
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.5; // Set volume to 50%
+            music.play().catch(function(error) {
+                console.log("Music playback failed:", error);
+            });
             
             // Start creating notes
             setInterval(createNote, 50);
