@@ -176,7 +176,7 @@
     </div>
 
     <button id="start-button" onclick="startFullscreen()">Click vào đây</button>
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" controls loop>
         <source src="Troye Sivan - Angel Baby (Lyrics).mp3" type="audio/mp3">
     </audio>
 
@@ -239,11 +239,32 @@
             // Hide the button after clicking
             document.getElementById('start-button').style.display = 'none';
             
-            // Play music
-            const music = document.getElementById('bgMusic');
-            music.volume = 0.5; // Set volume to 50%
-            music.play().catch(function(error) {
-                console.log("Music playback failed:", error);
+            // Play music with user interaction
+            const playMusic = async () => {
+                const music = document.getElementById('bgMusic');
+                try {
+                    music.volume = 0.5;
+                    await music.play();
+                    console.log("Music started playing");
+                } catch (error) {
+                    console.error("Error playing music:", error);
+                    alert("Nhấn vào màn hình một lần nữa để phát nhạc");
+                }
+            };
+            
+            // Try to play music
+            playMusic();
+            
+            // Add click event to try playing music again if it failed
+            document.addEventListener('click', function tryPlayingMusic() {
+                const music = document.getElementById('bgMusic');
+                if (music.paused) {
+                    playMusic();
+                }
+                // Remove this event listener after successful playback
+                if (!music.paused) {
+                    document.removeEventListener('click', tryPlayingMusic);
+                }
             });
             
             // Start creating notes
